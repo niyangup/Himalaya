@@ -2,6 +2,7 @@ package com.niyangup.himalaya.base
 
 import android.app.Application
 import android.content.Context
+import com.niyangup.himalaya.utils.LogUtil
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
 import com.ximalaya.ting.android.opensdk.datatrasfer.DeviceInfoProviderDefault
@@ -24,6 +25,7 @@ class BaseApplication : Application() {
             mXimalaya.init(this, mAppSecret, getDeviceInfoProvider(this))
         }
 
+        LogUtil.init(this.packageName, false)
     }
 
     private fun getDeviceInfoProvider(context: Context?): IDeviceInfoProvider {

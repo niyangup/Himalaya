@@ -1,41 +1,44 @@
 package com.niyangup.himalaya;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
-import com.ximalaya.ting.android.opensdk.model.category.Category;
-import com.ximalaya.ting.android.opensdk.model.category.CategoryList;
+import com.niyangup.himalaya.adapter.IndicatorAdapter;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private MagicIndicator mMainIndicator;
+    private ViewPager mContentPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map<String, String> map = new HashMap<>();
-        CommonRequest.getCategories(map, new IDataCallBack<CategoryList>() {
-            @Override
-            public void onSuccess(@Nullable CategoryList categoryList) {
-                for (Category category : categoryList.getCategories()) {
-                    Log.d(TAG, "onSuccess: " + category.getCategoryName());
-                }
-            }
+        initView();
+    }
 
-            @Override
-            public void onError(int i, String s) {
-                Log.d(TAG, "onError: " + s);
-            }
-        });
+    /**
+     * 初始化view
+     */
+    private void initView() {
+        mMainIndicator = findViewById(R.id.main_indicator);
+        mContentPager = findViewById(R.id.content_pager);
+        mMainIndicator.setBackgroundColor(getColor(R.color.main_color));
+
+        IndicatorAdapter adapter = new IndicatorAdapter(getApplicationContext());
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setAdapter(adapter);
+
+        mMainIndicator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(mMainIndicator, mContentPager);
     }
 }
