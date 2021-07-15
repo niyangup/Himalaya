@@ -37,7 +37,7 @@ public class RecommendPresenter implements IRecommendPresenter {
         return instance;
     }
 
-    private List<IRecommendViewCallback> callbackList = new ArrayList<>();
+    private final List<IRecommendViewCallback> callbackList = new ArrayList<>();
 
     @Override
     public void getRecommendList() {
@@ -66,12 +66,9 @@ public class RecommendPresenter implements IRecommendPresenter {
 
     private void handleRecommendResult(List<Album> albumList) {
         //通知Ui更新
-        if (callbackList != null) {
-            callbackList.forEach(callback -> {
-                callback.onRecommendListLoaded(albumList);
-            });
-
-        }
+        callbackList.forEach(callback -> {
+            callback.onRecommendListLoaded(albumList);
+        });
     }
 
     @Override
