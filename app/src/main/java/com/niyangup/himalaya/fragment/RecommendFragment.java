@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.niyangup.himalaya.R;
 import com.niyangup.himalaya.adapter.RecommendListAdapter;
 import com.niyangup.himalaya.base.BaseFragment;
+import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
+import com.niyangup.himalaya.presenters.RecommendPresenter;
 import com.niyangup.himalaya.utils.Constants;
 import com.niyangup.himalaya.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
@@ -28,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecommendFragment extends BaseFragment {
+public class RecommendFragment extends BaseFragment implements IRecommendViewCallback {
 
     View mRootView;
     RecyclerView mRv;
@@ -38,7 +40,9 @@ public class RecommendFragment extends BaseFragment {
     @Override
     public View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
         mRootView = inflater.inflate(R.layout.fragment_recommend, container, false);
-        getRecommendData();
+        RecommendPresenter instance = RecommendPresenter.getInstance();
+        instance.registerViewCallback(this);
+        instance.getRecommendList();
         return mRootView;
     }
 
@@ -63,30 +67,24 @@ public class RecommendFragment extends BaseFragment {
         mRv.setAdapter(mAdapter);
     }
 
-    private void getRecommendData() {
-        Map<String, String> map = new HashMap<>();
-        map.put(DTransferConstants.LIKE_COUNT, String.valueOf(Constants.RECOMMEND_COUNT));
-        CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
-            @Override
-            public void onSuccess(@Nullable GussLikeAlbumList gussLikeAlbumList) {
-                if (gussLikeAlbumList != null && !gussLikeAlbumList.getAlbumList().isEmpty()) {
-                    LogUtil.d(TAG, "onSuccress:" + gussLikeAlbumList.getAlbumList().size());
-                    updateRecommendUI(gussLikeAlbumList.getAlbumList());
-                } else {
-                    LogUtil.d(TAG, "isEmpty");
-                }
-
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                LogUtil.d(TAG, "error: " + s);
-
-            }
-        });
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        RecommendPresenter.getInstance().unRegisterViewCallback(this);
     }
 
-    private void updateRecommendUI(List<Album> albumList) {
-        mAdapter.setData(albumList);
+    @Override
+    public void onRecommendListLoaded(List<Album> result) {
+        mAdapter.setData(result);
+    }
+
+    @Override
+    public void onLoadMore(List<Album> result) {
+
+    }
+
+    @Override
+    public void onRefresh(List<Album> result) {
+
     }
 }
