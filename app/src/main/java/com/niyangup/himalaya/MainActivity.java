@@ -50,6 +50,7 @@ public class MainActivity extends FragmentActivity {
         commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(adapter);
 
+
         mMainIndicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(mMainIndicator, mContentPager);
     }
