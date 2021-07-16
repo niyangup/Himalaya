@@ -14,41 +14,49 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.niyangup.himalaya.R;
 import com.niyangup.himalaya.adapter.RecommendListAdapter;
 import com.niyangup.himalaya.base.BaseFragment;
+import com.niyangup.himalaya.interfaces.IRecommendPresenter;
 import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
-import com.niyangup.himalaya.presenters.RecommendPresenter;
-import com.niyangup.himalaya.utils.Constants;
-import com.niyangup.himalaya.utils.LogUtil;
-import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
-import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
-import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
+import com.niyangup.himalaya.presenters.RecommendPresenterImpl;
+import com.niyangup.himalaya.view.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
-import com.ximalaya.ting.android.opensdk.model.album.GussLikeAlbumList;
 
 import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RecommendFragment extends BaseFragment implements IRecommendViewCallback {
 
     View mRootView;
     RecyclerView mRv;
     RecommendListAdapter mAdapter;
+    private UILoader mUILoader;
     private static final String TAG = "RecommendFragment";
 
     @Override
     public View onSubViewLoaded(LayoutInflater inflater, ViewGroup container) {
-        mRootView = inflater.inflate(R.layout.fragment_recommend, container, false);
-        RecommendPresenter instance = RecommendPresenter.getInstance();
+        IRecommendPresenter instance = RecommendPresenterImpl.getInstance();
         instance.registerViewCallback(this);
+        mUILoader = new UILoader(getContext()) {
+            @Override
+            public View getSuccessView(ViewGroup viewGroup) {
+                return createSuccessView(inflater, viewGroup);
+            }
+
+            @Override
+            public void onRetry() {
+                instance.getRecommendList();
+            }
+        };
+
         instance.getRecommendList();
-        return mRootView;
+        if (mUILoader.getParent() instanceof ViewGroup) {
+            ((ViewGroup) mUILoader.getParent()).removeView(mUILoader);
+        }
+        return mUILoader;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private View createSuccessView(LayoutInflater inflater, ViewGroup container) {
+        mRootView = inflater.inflate(R.layout.fragment_recommend, container, false);
         mRv = mRootView.findViewById(R.id.recommend_rv);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -65,26 +73,34 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
 
         mAdapter = new RecommendListAdapter();
         mRv.setAdapter(mAdapter);
+        return mRootView;
     }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        RecommendPresenter.getInstance().unRegisterViewCallback(this);
+        RecommendPresenterImpl.getInstance().unRegisterViewCallback(this);
     }
 
     @Override
     public void onRecommendListLoaded(List<Album> result) {
         mAdapter.setData(result);
+        mUILoader.updateState(UILoader.UIStatus.SUCCESS);
     }
 
     @Override
-    public void onLoadMore(List<Album> result) {
-
+    public void onNetworkError() {
+        mUILoader.updateState(UILoader.UIStatus.NETWORK_ERROR);
     }
 
     @Override
-    public void onRefresh(List<Album> result) {
+    public void onEmpty() {
+        mUILoader.updateState(UILoader.UIStatus.EMPTY);
+    }
 
+    @Override
+    public void onLoading() {
+        mUILoader.updateState(UILoader.UIStatus.LOADING);
     }
 }

@@ -20,8 +20,6 @@ public interface IRecommendPresenter {
     void registerViewCallback(IRecommendViewCallback callback);
 
     void unRegisterViewCallback(IRecommendViewCallback callback);
-
-
 }
 
 

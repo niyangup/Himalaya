@@ -12,9 +12,12 @@ public interface IRecommendViewCallback {
      */
     void onRecommendListLoaded(List<Album> result);
 
-    void onLoadMore(List<Album> result);
+    /**
+     * 网络错误
+     */
+    void onNetworkError();
 
-    void onRefresh(List<Album> result);
+    void onEmpty();
 
-
+    void onLoading();
 }

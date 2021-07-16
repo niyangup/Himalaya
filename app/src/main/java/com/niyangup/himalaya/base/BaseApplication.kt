@@ -2,6 +2,7 @@ package com.niyangup.himalaya.base
 
 import android.app.Application
 import android.content.Context
+import android.os.Handler
 import com.niyangup.himalaya.utils.LogUtil
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
@@ -9,6 +10,15 @@ import com.ximalaya.ting.android.opensdk.datatrasfer.DeviceInfoProviderDefault
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDeviceInfoProvider
 
 class BaseApplication : Application() {
+
+    companion object {
+        private lateinit var sHandle: Handler
+
+        fun getHandle(): Handler {
+            return sHandle;
+        }
+    }
+
 
     override fun onCreate() {
         super.onCreate()
@@ -26,6 +36,7 @@ class BaseApplication : Application() {
         }
 
         LogUtil.init(this.packageName, false)
+        sHandle = Handler()
     }
 
     private fun getDeviceInfoProvider(context: Context?): IDeviceInfoProvider {

@@ -17,20 +17,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecommendPresenter implements IRecommendPresenter {
+public class RecommendPresenterImpl implements IRecommendPresenter {
 
     private static final String TAG = "RecommendPresenter";
 
-    private RecommendPresenter() {
+    private RecommendPresenterImpl() {
     }
 
-    private static RecommendPresenter instance = null;
+    private static RecommendPresenterImpl instance = null;
 
-    public static RecommendPresenter getInstance() {
+    public static RecommendPresenterImpl getInstance() {
         if (instance == null) {
-            synchronized (RecommendPresenter.class) {
+            synchronized (RecommendPresenterImpl.class) {
                 if (instance == null) {
-                    instance = new RecommendPresenter();
+                    instance = new RecommendPresenterImpl();
                 }
             }
         }
@@ -41,6 +41,7 @@ public class RecommendPresenter implements IRecommendPresenter {
 
     @Override
     public void getRecommendList() {
+        updateLoading();
         Map<String, String> map = new HashMap<>();
         map.put(DTransferConstants.LIKE_COUNT, String.valueOf(Constants.RECOMMEND_COUNT));
         CommonRequest.getGuessLikeAlbum(map, new IDataCallBack<GussLikeAlbumList>() {
@@ -53,22 +54,33 @@ public class RecommendPresenter implements IRecommendPresenter {
                 } else {
                     LogUtil.d(TAG, "isEmpty");
                 }
-
             }
 
             @Override
             public void onError(int i, String s) {
                 LogUtil.d(TAG, "error: " + s);
-
+                handleError();
             }
         });
     }
 
+    private void updateLoading() {
+        callbackList.forEach(IRecommendViewCallback::onLoading);
+    }
+
+    private void handleError() {
+        callbackList.forEach(IRecommendViewCallback::onNetworkError);
+    }
+
     private void handleRecommendResult(List<Album> albumList) {
-        //通知Ui更新
-        callbackList.forEach(callback -> {
-            callback.onRecommendListLoaded(albumList);
-        });
+        if (albumList != null && albumList.size() > 0) {
+            //通知Ui更新
+            callbackList.forEach(callback -> {
+                callback.onRecommendListLoaded(albumList);
+            });
+        } else {
+            callbackList.forEach(IRecommendViewCallback::onEmpty);
+        }
     }
 
     @Override
