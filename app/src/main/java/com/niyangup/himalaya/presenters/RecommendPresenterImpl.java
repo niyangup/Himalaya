@@ -50,7 +50,11 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                 if (gussLikeAlbumList != null && !gussLikeAlbumList.getAlbumList().isEmpty()) {
                     LogUtil.d(TAG, "onSuccress:" + gussLikeAlbumList.getAlbumList().size());
                     //updateRecommendUI(gussLikeAlbumList.getAlbumList());
-                    handleRecommendResult(gussLikeAlbumList.getAlbumList());
+                    if (gussLikeAlbumList.getAlbumList() == null || gussLikeAlbumList.getAlbumList().size() == 0) {
+                        updateEmpty();
+                    } else {
+                        handleRecommendResult(gussLikeAlbumList.getAlbumList());
+                    }
                 } else {
                     LogUtil.d(TAG, "isEmpty");
                 }
@@ -62,6 +66,10 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                 handleError();
             }
         });
+    }
+
+    private void updateEmpty() {
+        callbackList.forEach(IRecommendViewCallback::onEmpty);
     }
 
     private void updateLoading() {
