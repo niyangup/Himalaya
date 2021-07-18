@@ -1,21 +1,23 @@
 package com.niyangup.himalaya.fragment;
 
+import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.niyangup.himalaya.DetailActivity;
 import com.niyangup.himalaya.R;
 import com.niyangup.himalaya.adapter.RecommendListAdapter;
 import com.niyangup.himalaya.base.BaseFragment;
+import com.niyangup.himalaya.interfaces.IDetailPresenter;
 import com.niyangup.himalaya.interfaces.IRecommendPresenter;
 import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
+import com.niyangup.himalaya.presenters.DetailPresenterImpl;
 import com.niyangup.himalaya.presenters.RecommendPresenterImpl;
 import com.niyangup.himalaya.view.UILoader;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
@@ -24,7 +26,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
-public class RecommendFragment extends BaseFragment implements IRecommendViewCallback {
+public class RecommendFragment extends BaseFragment implements IRecommendViewCallback, RecommendListAdapter.OnRecommendItemClickListener {
 
     View mRootView;
     RecyclerView mRv;
@@ -72,6 +74,7 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
         });
 
         mAdapter = new RecommendListAdapter();
+        mAdapter.setOnRecommendItemClickListener(this);
         mRv.setAdapter(mAdapter);
         return mRootView;
     }
@@ -102,5 +105,12 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
     @Override
     public void onLoading() {
         mUILoader.updateState(UILoader.UIStatus.LOADING);
+    }
+
+    @Override
+    public void onItemClick(int index, Album album) {
+        DetailPresenterImpl.getInstance().setTargetAlbum(album);
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        startActivity(intent);
     }
 }

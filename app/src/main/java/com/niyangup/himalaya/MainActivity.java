@@ -8,12 +8,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.niyangup.himalaya.adapter.IndicatorAdapter;
 import com.niyangup.himalaya.adapter.MainContentAdapter;
+import com.niyangup.himalaya.base.BaseActivity;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
     private MagicIndicator mMainIndicator;

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.niyangup.himalaya.R;
+import com.niyangup.himalaya.utils.LogUtil;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 
@@ -17,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdapter.InnerHolder> {
+    private static final String TAG = "RecommendListAdapter";
     private List<Album> data = new ArrayList<>();
+    private OnRecommendItemClickListener listener = null;
 
     @NonNull
     @Override
@@ -29,7 +32,18 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
 
     @Override
     public void onBindViewHolder(@NonNull RecommendListAdapter.InnerHolder holder, int position) {
+        holder.itemView.setTag(position);
         holder.setData(data.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int index = (int) holder.itemView.getTag();
+                if (listener != null) {
+                    listener.onItemClick(index, data.get(index));
+                    LogUtil.d(TAG, "this is click " + index);
+                }
+            }
+        });
     }
 
     @Override
@@ -67,5 +81,13 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
                 Picasso.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(img);
             }
         }
+    }
+
+    public void setOnRecommendItemClickListener(OnRecommendItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnRecommendItemClickListener {
+        void onItemClick(int index, Album album);
     }
 }
