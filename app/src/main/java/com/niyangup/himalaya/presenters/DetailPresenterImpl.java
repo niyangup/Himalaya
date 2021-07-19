@@ -7,10 +7,12 @@ import androidx.annotation.Nullable;
 import com.niyangup.himalaya.interfaces.IDetailPresenter;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
 import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
+import com.niyangup.himalaya.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
+import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.model.track.TrackList;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     private static final String TAG = "DetailPresenterImpl";
     private Album mAlbum = null;
+    private final List<Track> mTracks = new ArrayList<>();
 
     private DetailPresenterImpl() {
     }
@@ -41,12 +44,9 @@ public class DetailPresenterImpl implements IDetailPresenter {
         return instance;
     }
 
-    private final List<IRecommendViewCallback> callbackList = new ArrayList<>();
-
     @Override
     public void getAlbumDetail(int albumId, int page) {
-
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put(DTransferConstants.ALBUM_ID, "" + albumId);
         map.put(DTransferConstants.SORT, "asc");
         map.put(DTransferConstants.PAGE, "" + page);
@@ -54,6 +54,12 @@ public class DetailPresenterImpl implements IDetailPresenter {
             @Override
             public void onSuccess(@Nullable TrackList trackList) {
                 Log.d(TAG, "onSuccess: " + trackList.getTracks());
+                if (trackList != null) {
+                    List<Track> tracks = trackList.getTracks();
+                    LogUtil.d(TAG, "tracks size -- > " + tracks.size());
+                    mTracks.addAll(0, tracks);
+                    handlerAlbumDetailResult(mTracks);
+                }
             }
 
             @Override
@@ -61,7 +67,12 @@ public class DetailPresenterImpl implements IDetailPresenter {
                 Log.e(TAG, "onError: " + s);
             }
         });
+    }
 
+    private void handlerAlbumDetailResult(List<Track> mTracks) {
+        callbacks.forEach(iDetailViewCallback -> {
+            iDetailViewCallback.onDetailListLoaded(mTracks);
+        });
     }
 
     @Override
@@ -77,7 +88,7 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     @Override
     public void registerViewCallback(IDetailViewCallback callback) {
-        if (callback != null && !callbackList.contains(callback)) {
+        if (callback != null && !callbacks.contains(callback)) {
             callbacks.add(callback);
         }
         if (callback != null && mAlbum != null) {

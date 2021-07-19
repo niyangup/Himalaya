@@ -3,9 +3,12 @@ package com.niyangup.himalaya;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.niyangup.himalaya.base.BaseActivity;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
@@ -28,6 +31,7 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
     TextView mTitle;
     TextView mSubtitle;
     DetailPresenterImpl detailPresenter;
+    RecyclerView mRvAlbum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +49,12 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
         mSmallCover = this.findViewById(R.id.iv_small_cover);
         mTitle = this.findViewById(R.id.tv_title);
         mSubtitle = this.findViewById(R.id.tv_subtitle);
-
+        mRvAlbum = this.findViewById(R.id.rv_album);
     }
 
     @Override
     public void onDetailListLoaded(List<Track> tracks) {
-
+        Log.d(TAG, "onDetailListLoaded: " + tracks.size());
     }
 
     @Override
@@ -70,7 +74,6 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
                         //新增图片模糊效果
                         ImageBlur.makeBlur(mLargeCover, AlbumDetailActivity.this);
                     }
-
                 }
 
                 @Override
