@@ -1,12 +1,22 @@
 package com.niyangup.himalaya.presenters;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import com.niyangup.himalaya.interfaces.IDetailPresenter;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
 import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
+import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
+import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;
+import com.ximalaya.ting.android.opensdk.datatrasfer.IDataCallBack;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
+import com.ximalaya.ting.android.opensdk.model.track.TrackList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DetailPresenterImpl implements IDetailPresenter {
 
@@ -35,6 +45,22 @@ public class DetailPresenterImpl implements IDetailPresenter {
 
     @Override
     public void getAlbumDetail(int albumId, int page) {
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(DTransferConstants.ALBUM_ID, "" + albumId);
+        map.put(DTransferConstants.SORT, "asc");
+        map.put(DTransferConstants.PAGE, "" + page);
+        CommonRequest.getTracks(map, new IDataCallBack<TrackList>() {
+            @Override
+            public void onSuccess(@Nullable TrackList trackList) {
+                Log.d(TAG, "onSuccess: " + trackList.getTracks());
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e(TAG, "onError: " + s);
+            }
+        });
 
     }
 

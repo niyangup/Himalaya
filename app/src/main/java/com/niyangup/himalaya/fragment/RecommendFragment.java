@@ -10,11 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.niyangup.himalaya.DetailActivity;
+import com.niyangup.himalaya.AlbumDetailActivity;
 import com.niyangup.himalaya.R;
 import com.niyangup.himalaya.adapter.RecommendListAdapter;
 import com.niyangup.himalaya.base.BaseFragment;
-import com.niyangup.himalaya.interfaces.IDetailPresenter;
 import com.niyangup.himalaya.interfaces.IRecommendPresenter;
 import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
 import com.niyangup.himalaya.presenters.DetailPresenterImpl;
@@ -110,7 +109,7 @@ public class RecommendFragment extends BaseFragment implements IRecommendViewCal
     @Override
     public void onItemClick(int index, Album album) {
         DetailPresenterImpl.getInstance().setTargetAlbum(album);
-        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        Intent intent = new Intent(getActivity(), AlbumDetailActivity.class);
         startActivity(intent);
     }
 }

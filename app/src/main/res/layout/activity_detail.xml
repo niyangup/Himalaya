@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    tools:context=".AlbumDetailActivity">
 
     <ImageView
         android:id="@+id/iv_large_cover"
@@ -12,7 +12,27 @@
         android:layout_height="150dp"
         android:scaleType="fitXY" />
 
+    <RelativeLayout
+        android:id="@+id/rl_subscription"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/iv_large_cover"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/shape_subscription_bg"
+            android:gravity="center"
+            android:text="+订阅"
+            android:textColor="@color/main_white" />
+    </RelativeLayout>
+
     <com.niyangup.himalaya.view.RoundRectImageView
+        android:src="@mipmap/logo"
         android:id="@+id/iv_small_cover"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -48,4 +68,56 @@
             android:text="this is subtitle"
             android:textSize="18sp" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/rl_subscription"
+        android:background="#EBE8E8">
+
+        <ImageView
+            android:id="@+id/iv_player"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:src="@mipmap/play_info_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@+id/iv_player"
+            android:text="继续播放"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
+            android:layout_toStartOf="@id/iv_select"
+            android:text="选集"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_select"
+            android:layout_width="18dp"
+            android:layout_height="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="18dp"
+            android:src="@mipmap/arrow_icon" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_album"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_container" />
+
 </RelativeLayout>
