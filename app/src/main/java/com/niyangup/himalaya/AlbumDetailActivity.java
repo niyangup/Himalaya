@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.niyangup.himalaya.adapter.AlbumDetailListAdapter;
 import com.niyangup.himalaya.base.BaseActivity;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
 import com.niyangup.himalaya.presenters.DetailPresenterImpl;
@@ -55,6 +57,14 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
     @Override
     public void onDetailListLoaded(List<Track> tracks) {
         Log.d(TAG, "onDetailListLoaded: " + tracks.size());
+        handleListView(tracks);
+    }
+
+    private void handleListView(List<Track> tracks) {
+        mRvAlbum.setLayoutManager(new LinearLayoutManager(this));
+        AlbumDetailListAdapter adapter = new AlbumDetailListAdapter();
+        mRvAlbum.setAdapter(adapter);
+        adapter.setData(tracks);
     }
 
     @Override
