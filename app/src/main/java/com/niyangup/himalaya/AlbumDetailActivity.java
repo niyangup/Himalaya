@@ -1,6 +1,7 @@
 package com.niyangup.himalaya;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
+
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
 
 import java.util.List;
 
@@ -62,6 +66,17 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
 
     private void handleListView(List<Track> tracks) {
         mRvAlbum.setLayoutManager(new LinearLayoutManager(this));
+
+        mRvAlbum.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.top = UIUtil.dip2px(view.getContext(), 5);
+                outRect.bottom = UIUtil.dip2px(view.getContext(), 5);
+                outRect.left = UIUtil.dip2px(view.getContext(), 5);
+                outRect.right = UIUtil.dip2px(view.getContext(), 5);
+            }
+        });
+
         AlbumDetailListAdapter adapter = new AlbumDetailListAdapter();
         mRvAlbum.setAdapter(adapter);
         adapter.setData(tracks);
