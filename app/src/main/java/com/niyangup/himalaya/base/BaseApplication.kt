@@ -8,6 +8,7 @@ import com.ximalaya.ting.android.opensdk.constants.DTransferConstants
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest
 import com.ximalaya.ting.android.opensdk.datatrasfer.DeviceInfoProviderDefault
 import com.ximalaya.ting.android.opensdk.datatrasfer.IDeviceInfoProvider
+import com.ximalaya.ting.android.opensdk.player.XmPlayerManager
 
 class BaseApplication : Application() {
 
@@ -17,11 +18,17 @@ class BaseApplication : Application() {
         fun getHandle(): Handler {
             return sHandle;
         }
+
+        private var context: Application? = null
+        fun getContext(): Context {
+            return context!!
+        }
     }
 
 
     override fun onCreate() {
         super.onCreate()
+        context = this
         val mXimalaya = CommonRequest.getInstanse()
         if (DTransferConstants.isRelease) {
             val mAppSecret = "8646d66d6abe2efd14f2891f9fd1c8af"
@@ -37,6 +44,8 @@ class BaseApplication : Application() {
 
         LogUtil.init(this.packageName, false)
         sHandle = Handler()
+
+        XmPlayerManager.getInstance(this).init()
     }
 
     private fun getDeviceInfoProvider(context: Context?): IDeviceInfoProvider {

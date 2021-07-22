@@ -20,6 +20,7 @@ import com.niyangup.himalaya.adapter.AlbumDetailListAdapter;
 import com.niyangup.himalaya.base.BaseActivity;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
 import com.niyangup.himalaya.presenters.DetailPresenterImpl;
+import com.niyangup.himalaya.presenters.PlayerPresenterImpl;
 import com.niyangup.himalaya.utils.ImageBlur;
 import com.niyangup.himalaya.utils.LogUtil;
 import com.niyangup.himalaya.view.UILoader;
@@ -170,8 +171,11 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
     }
 
     @Override
-    public void onItemClick() {
-        Log.d(TAG, "onItemClick: ");
-        startActivity(new Intent(AlbumDetailActivity.this, PlayerActivity.class));
+    public void onItemClick(List<Track> tracks, int position) {
+        Log.d(TAG, "onItemClick: " + position);
+        PlayerPresenterImpl playerPresenter = PlayerPresenterImpl.getInstance();
+        playerPresenter.setPlayList(tracks, position);
+        Intent intent = new Intent(AlbumDetailActivity.this, PlayerActivity.class);
+        startActivity(intent);
     }
 }

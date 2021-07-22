@@ -64,7 +64,7 @@ public class AlbumDetailListAdapter extends RecyclerView.Adapter<AlbumDetailList
 
         holder.itemView.setOnClickListener(v -> {
             if (mListener != null) {
-                mListener.onItemClick();
+                mListener.onItemClick(mTracks,position);
             }
         });
     }
@@ -87,6 +87,6 @@ public class AlbumDetailListAdapter extends RecyclerView.Adapter<AlbumDetailList
     }
 
     public interface OnItemClickListener {
-        void onItemClick();
+        void onItemClick(List<Track> tracks, int position);
     }
 }
