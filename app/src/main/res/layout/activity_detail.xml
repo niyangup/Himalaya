@@ -118,11 +118,10 @@
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_album"
+    <FrameLayout
+        android:id="@+id/fl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_container"
-        android:background="#fff4f4f4" />
+        android:layout_below="@+id/rl_container" />
 
 </RelativeLayout>

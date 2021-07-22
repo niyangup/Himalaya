@@ -9,5 +9,7 @@ public interface IDetailViewCallback {
     void onDetailListLoaded(List<Track> tracks);
 
     void onAlbumLoaded(Album album);
+
+    void onNetworkError(int i, String s);
 }
 

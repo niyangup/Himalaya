@@ -65,7 +65,14 @@ public class DetailPresenterImpl implements IDetailPresenter {
             @Override
             public void onError(int i, String s) {
                 Log.e(TAG, "onError: " + s);
+                handleNetworkError(i,s);
             }
+        });
+    }
+
+    private void handleNetworkError(int i, String s) {
+        callbacks.forEach(iDetailViewCallback -> {
+            iDetailViewCallback.onNetworkError(i,s);
         });
     }
 

@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.niyangup.himalaya.interfaces.IDetailViewCallback;
 import com.niyangup.himalaya.presenters.DetailPresenterImpl;
 import com.niyangup.himalaya.utils.ImageBlur;
 import com.niyangup.himalaya.utils.LogUtil;
+import com.niyangup.himalaya.view.UILoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.ximalaya.ting.android.opensdk.model.album.Album;
@@ -39,6 +42,10 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
     DetailPresenterImpl detailPresenter;
     RecyclerView mRvAlbum;
 
+    UILoader mUiLoader;
+    private int mCurrentId = -1;
+    AlbumDetailListAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,16 +62,28 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
         mSmallCover = this.findViewById(R.id.iv_small_cover);
         mTitle = this.findViewById(R.id.tv_title);
         mSubtitle = this.findViewById(R.id.tv_subtitle);
-        mRvAlbum = this.findViewById(R.id.rv_album);
+        FrameLayout container = this.findViewById(R.id.fl_container);
+        if (mUiLoader == null) {
+            mUiLoader = new UILoader(this) {
+                @Override
+                public View getSuccessView(ViewGroup viewGroup) {
+                    return createSuccessView(viewGroup);
+                }
+
+                @Override
+                public void onRetry() {
+                    detailPresenter.getAlbumDetail(mCurrentId, 1);
+                }
+            };
+        }
+
+        container.removeAllViews();
+        container.addView(mUiLoader);
     }
 
-    @Override
-    public void onDetailListLoaded(List<Track> tracks) {
-        Log.d(TAG, "onDetailListLoaded: " + tracks.size());
-        handleListView(tracks);
-    }
-
-    private void handleListView(List<Track> tracks) {
+    private View createSuccessView(ViewGroup viewGroup) {
+        View view = View.inflate(this, R.layout.item_detail_list, null);
+        mRvAlbum = view.findViewById(R.id.rv_album);
         mRvAlbum.setLayoutManager(new LinearLayoutManager(this));
 
         mRvAlbum.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -77,15 +96,40 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
             }
         });
 
-        AlbumDetailListAdapter adapter = new AlbumDetailListAdapter();
-        mRvAlbum.setAdapter(adapter);
-        adapter.setData(tracks);
+        mAdapter = new AlbumDetailListAdapter();
+        mRvAlbum.setAdapter(mAdapter);
+
+        return view;
+    }
+
+    @Override
+    public void onDetailListLoaded(List<Track> tracks) {
+        Log.d(TAG, "onDetailListLoaded: " + tracks.size());
+        if (tracks == null || tracks.size() == 0) {
+            if (mUiLoader != null) {
+                mUiLoader.updateState(UILoader.UIStatus.EMPTY);
+            }
+        } else {
+            if (mUiLoader != null) {
+                mUiLoader.updateState(UILoader.UIStatus.SUCCESS);
+            }
+            handleListView(tracks);
+        }
+    }
+
+    private void handleListView(List<Track> tracks) {
+        mAdapter.setData(tracks);
     }
 
     @Override
     public void onAlbumLoaded(Album album) {
 
-        detailPresenter.getAlbumDetail((int) album.getId(), 1);
+        if (mUiLoader != null) {
+            mUiLoader.updateState(UILoader.UIStatus.LOADING);
+        }
+        mCurrentId = (int) album.getId();
+
+        detailPresenter.getAlbumDetail(mCurrentId, 1);
 
         mTitle.setText(album.getAlbumTitle());
         mSubtitle.setText(album.getAnnouncer().getNickname());
@@ -110,6 +154,11 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
         }
 
         Picasso.with(this).load(album.getCoverUrlLarge()).into(mSmallCover);
+    }
+
+    @Override
+    public void onNetworkError(int i, String s) {
+        mUiLoader.updateState(UILoader.UIStatus.NETWORK_ERROR);
     }
 
     @Override
