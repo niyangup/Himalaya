@@ -1,7 +1,7 @@
 package com.niyangup.himalaya.interfaces;
 
 
-public interface IRecommendPresenter {
+public interface IRecommendPresenter extends IBasePresenter<IRecommendViewCallback> {
     /**
      * 获取推荐列表
      */
@@ -17,9 +17,6 @@ public interface IRecommendPresenter {
      */
     void loadMore();
 
-    void registerViewCallback(IRecommendViewCallback callback);
-
-    void unRegisterViewCallback(IRecommendViewCallback callback);
 }
 
 

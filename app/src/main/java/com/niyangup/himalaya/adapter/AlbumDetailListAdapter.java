@@ -19,6 +19,13 @@ public class AlbumDetailListAdapter extends RecyclerView.Adapter<AlbumDetailList
     private List<Track> mTracks = new ArrayList<>();
     private final DateFormat mUpdateDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final DateFormat mDurationFormat = new SimpleDateFormat("mm:ss");
+    private OnItemClickListener mListener = null;
+
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mListener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -54,6 +61,12 @@ public class AlbumDetailListAdapter extends RecyclerView.Adapter<AlbumDetailList
         String updateTimeText = mUpdateDateFormat.format(track.getUpdatedAt());
         updateDateTv.setText(updateTimeText);
 
+
+        holder.itemView.setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onItemClick();
+            }
+        });
     }
 
     @Override
@@ -71,5 +84,9 @@ public class AlbumDetailListAdapter extends RecyclerView.Adapter<AlbumDetailList
         public AlbumViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick();
     }
 }

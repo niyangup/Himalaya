@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 
 import com.niyangup.himalaya.interfaces.IDetailPresenter;
 import com.niyangup.himalaya.interfaces.IDetailViewCallback;
-import com.niyangup.himalaya.interfaces.IRecommendViewCallback;
 import com.niyangup.himalaya.utils.LogUtil;
 import com.ximalaya.ting.android.opensdk.constants.DTransferConstants;
 import com.ximalaya.ting.android.opensdk.datatrasfer.CommonRequest;

@@ -1,6 +1,6 @@
 package com.niyangup.himalaya.interfaces;
 
-public interface IDetailPresenter {
+public interface IDetailPresenter extends IBasePresenter<IDetailViewCallback> {
     void getAlbumDetail(int albumId, int page);
 
     /**
@@ -13,8 +13,4 @@ public interface IDetailPresenter {
      */
     void loadMore();
 
-
-    void registerViewCallback(IDetailViewCallback callback);
-
-    void unRegisterViewCallback(IDetailViewCallback callback);
 }

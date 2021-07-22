@@ -1,5 +1,6 @@
 package com.niyangup.himalaya;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -32,7 +33,7 @@ import net.lucode.hackware.magicindicator.buildins.UIUtil;
 import java.util.List;
 
 
-public class AlbumDetailActivity extends BaseActivity implements IDetailViewCallback {
+public class AlbumDetailActivity extends BaseActivity implements IDetailViewCallback, AlbumDetailListAdapter.OnItemClickListener {
 
     private static final String TAG = "DetailActivity";
     ImageView mLargeCover;
@@ -97,6 +98,7 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
         });
 
         mAdapter = new AlbumDetailListAdapter();
+        mAdapter.setOnItemClickListener(this);
         mRvAlbum.setAdapter(mAdapter);
 
         return view;
@@ -165,5 +167,11 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
     protected void onDestroy() {
         super.onDestroy();
         detailPresenter.unRegisterViewCallback(this);
+    }
+
+    @Override
+    public void onItemClick() {
+        Log.d(TAG, "onItemClick: ");
+        startActivity(new Intent(AlbumDetailActivity.this, PlayerActivity.class));
     }
 }

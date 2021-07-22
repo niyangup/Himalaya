@@ -2,8 +2,6 @@ package com.niyangup.himalaya;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.niyangup.himalaya.adapter.IndicatorAdapter;
