@@ -4,17 +4,20 @@ import com.niyangup.himalaya.base.BaseApplication;
 import com.niyangup.himalaya.interfaces.IPlayerPresenter;
 import com.niyangup.himalaya.interfaces.IPlayerViewCallback;
 import com.niyangup.himalaya.utils.LogUtil;
+import com.ximalaya.ting.android.opensdk.model.PlayableModel;
 import com.ximalaya.ting.android.opensdk.model.advertis.Advertis;
 import com.ximalaya.ting.android.opensdk.model.advertis.AdvertisList;
 import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.XmPlayerManager;
 import com.ximalaya.ting.android.opensdk.player.advertis.IXmAdsStatusListener;
+import com.ximalaya.ting.android.opensdk.player.service.IXmPlayerStatusListener;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
+import com.ximalaya.ting.android.opensdk.player.service.XmPlayerException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListener {
+public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListener, IXmPlayerStatusListener {
 
     private static final String TAG = "PlayerPresenterImpl";
     private final XmPlayerManager mPlayerManager;
@@ -22,6 +25,8 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
     private PlayerPresenterImpl() {
         mPlayerManager = XmPlayerManager.getInstance(BaseApplication.Companion.getContext());
         mPlayerManager.addAdsStatusListener(this);
+
+        mPlayerManager.addPlayerStatusListener(this);
     }
 
     private static PlayerPresenterImpl instance = null;
@@ -54,7 +59,7 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
 
     @Override
     public void pause() {
-
+        mPlayerManager.pause();
     }
 
     @Override
@@ -94,7 +99,12 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
 
     @Override
     public void seekTo(int progress) {
+        mPlayerManager.seekTo(progress);
+    }
 
+    @Override
+    public boolean isPlaying() {
+        return mPlayerManager.isPlaying();
     }
 
     @Override
@@ -152,4 +162,62 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
     /**
      * 广告相关回调结束
      */
+
+    @Override
+    public void onPlayStart() {
+
+    }
+
+    @Override
+    public void onPlayPause() {
+
+    }
+
+    @Override
+    public void onPlayStop() {
+
+    }
+
+    @Override
+    public void onSoundPlayComplete() {
+
+    }
+
+    @Override
+    public void onSoundPrepared() {
+
+    }
+
+    @Override
+    public void onSoundSwitch(PlayableModel playableModel, PlayableModel playableModel1) {
+
+    }
+
+    @Override
+    public void onBufferingStart() {
+
+    }
+
+    @Override
+    public void onBufferingStop() {
+
+    }
+
+    @Override
+    public void onBufferProgress(int i) {
+
+    }
+
+    @Override
+    public void onPlayProgress(int current, int total) {
+        mCallbackList.forEach(callback -> {
+            callback.onProgressChange(current, total);
+        });
+    }
+
+    @Override
+    public boolean onError(XmPlayerException e) {
+        return false;
+    }
+
 }

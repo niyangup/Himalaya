@@ -30,7 +30,7 @@ public interface IPlayerViewCallback {
      */
     void onPlayModeChange(XmPlayListControl.PlayMode mode);
 
-    void onProgressChange(long currentProgress, long totalProgress);
+    void onProgressChange(int currentProgress, int totalProgress);
 
     void onAdLoading();
 
