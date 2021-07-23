@@ -27,7 +27,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerViewCallback 
     TextView mCurrentPosition, mTrackDuration;
     SeekBar mSeekBar;
     private final SimpleDateFormat mMinFormat = new SimpleDateFormat("MM:ss");
-    private final SimpleDateFormat mHourFormat = new SimpleDateFormat("hh:ss:ss");
+    private final SimpleDateFormat mHourFormat = new SimpleDateFormat("hh:MM:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
