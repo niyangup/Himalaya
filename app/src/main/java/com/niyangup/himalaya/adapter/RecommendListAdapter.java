@@ -34,14 +34,11 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
     public void onBindViewHolder(@NonNull RecommendListAdapter.InnerHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.setData(data.get(position));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int index = (int) holder.itemView.getTag();
-                if (listener != null) {
-                    listener.onItemClick(index, data.get(index));
-                    LogUtil.d(TAG, "this is click " + index);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            int index = (int) holder.itemView.getTag();
+            if (listener != null) {
+                listener.onItemClick(index, data.get(index));
+                LogUtil.d(TAG, "this is click " + index);
             }
         });
     }
@@ -78,7 +75,7 @@ public class RecommendListAdapter extends RecyclerView.Adapter<RecommendListAdap
             tvSize.setText(album.getIncludeTrackCount() + "");
 
             if (!TextUtils.isEmpty(album.getCoverUrlLarge())) {
-                Picasso.with(itemView.getContext()).load(album.getCoverUrlLarge()).into(img);
+                Picasso.with(itemView.getContext()).load(album.getCoverUrlSmall()).into(img);
             }
         }
     }
