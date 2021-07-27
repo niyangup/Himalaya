@@ -28,7 +28,7 @@ import java.util.List;
 public class PlayerActivity extends BaseActivity implements IPlayerViewCallback, ViewPager.OnPageChangeListener {
     private static final String TAG = "PlayerActivity";
     private IPlayerPresenter mPlayerPresenter;
-    private ImageView mPlayOrPauseBtn;
+    private ImageView mPlayOrPauseBtn, mPlayModeSwitchBtn;
     private TextView mCurrentPosition, mTrackDuration, mTvTrackTitle;
     private SeekBar mSeekBar;
     private final SimpleDateFormat mMinFormat = new SimpleDateFormat("MM:ss");
@@ -104,6 +104,10 @@ public class PlayerActivity extends BaseActivity implements IPlayerViewCallback,
         });
 
         viewPager.addOnPageChangeListener(this);
+
+        mPlayModeSwitchBtn.setOnClickListener(v -> {
+            //TODO 修改播放模式
+        });
     }
 
     private void initView() {
@@ -119,6 +123,7 @@ public class PlayerActivity extends BaseActivity implements IPlayerViewCallback,
         Log.d(TAG, "initView: "+mPlayerPresenter.getCurrentIndex());
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(mPlayerPresenter.getCurrentIndex());
+        mPlayModeSwitchBtn = this.findViewById(R.id.player_mode_switch_btn);
     }
 
 

@@ -89,28 +89,28 @@
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
-                android:src="@mipmap/previous_normal" />
+                android:src="@drawable/selector_palyer_pre" />
 
             <ImageView
                 android:id="@+id/play_or_pause_btn"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="1"
-                android:src="@mipmap/stop_normal" />
+                android:src="@drawable/selector_palyer_play" />
 
             <ImageView
                 android:id="@+id/play_next"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
-                android:src="@mipmap/next_normal" />
+                android:src="@drawable/selector_player_next" />
 
             <ImageView
                 android:id="@+id/player_list"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
-                android:src="@mipmap/player_icon_list_normal" />
+                android:src="@drawable/selector_palyer_list" />
 
 
         </LinearLayout>
