@@ -27,5 +27,12 @@ public interface IPlayerPresenter extends IBasePresenter<IPlayerViewCallback> {
 
     boolean isPlaying();
 
+    /**
+     * 正在播放的index
+     *
+     * @return index
+     */
+    int getCurrentIndex();
+
 
 }

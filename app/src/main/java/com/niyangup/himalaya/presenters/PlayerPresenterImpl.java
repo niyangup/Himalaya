@@ -1,5 +1,7 @@
 package com.niyangup.himalaya.presenters;
 
+import android.util.Log;
+
 import com.niyangup.himalaya.base.BaseApplication;
 import com.niyangup.himalaya.interfaces.IPlayerPresenter;
 import com.niyangup.himalaya.interfaces.IPlayerViewCallback;
@@ -21,6 +23,8 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
 
     private static final String TAG = "PlayerPresenterImpl";
     private final XmPlayerManager mPlayerManager;
+    private Track mTrack;
+    private int mCurrentIndex = 0;
 
     private PlayerPresenterImpl() {
         mPlayerManager = XmPlayerManager.getInstance(BaseApplication.Companion.getContext());
@@ -47,6 +51,9 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
     public void setPlayList(List<Track> tracks, int currentIndex) {
         if (tracks != null && tracks.size() > 0 && mPlayerManager != null) {
             mPlayerManager.setPlayList(tracks, currentIndex);
+            Track track = tracks.get(currentIndex);
+            mTrack = track;
+            mCurrentIndex = currentIndex;
         } else {
             LogUtil.e(TAG, "tracks is null || mPlayerManager is null");
         }
@@ -74,27 +81,44 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
 
     @Override
     public void playerPre() {
+        if (mPlayerManager != null) {
+            mPlayerManager.playPre();
+        }
 
     }
 
     @Override
     public void playerNext() {
+        if (mPlayerManager != null) {
+            mPlayerManager.playNext();
+        }
+    }
 
+    @Override
+    public int getCurrentIndex() {
+        Log.d(TAG, "getCurrentIndex: " + mCurrentIndex);
+        return this.mCurrentIndex;
     }
 
     @Override
     public void switchPlayModel(XmPlayListControl.PlayMode mode) {
-
+        Log.d(TAG, "switchPlayModel: " + mode.name());
     }
 
     @Override
     public void getPlayList() {
-
+        List<Track> playList = mPlayerManager.getPlayList();
+        int position = mPlayerManager.getCurrentIndex();
+        Log.d(TAG, "getPlayList: " + position);
+        mCallbackList.forEach(callback -> {
+            callback.onListLoaded(playList);
+            callback.onTrackUpdate(playList.get(position));
+        });
     }
 
     @Override
     public void playerByIndex(int index) {
-
+        mPlayerManager.play(index);
     }
 
     @Override
@@ -189,7 +213,16 @@ public class PlayerPresenterImpl implements IPlayerPresenter, IXmAdsStatusListen
     }
 
     @Override
-    public void onSoundSwitch(PlayableModel playableModel, PlayableModel playableModel1) {
+    public void onSoundSwitch(PlayableModel lastModel, PlayableModel currentModel) {
+        Log.d(TAG, "onSoundSwitch: ");
+        if (currentModel instanceof Track) {
+            Track track = (Track) currentModel;
+            Log.d(TAG, "onSoundSwitch: " + track.getTrackTitle());
+
+            mCallbackList.forEach(iPlayerViewCallback -> {
+                iPlayerViewCallback.onTrackUpdate(track);
+            });
+        }
 
     }
 

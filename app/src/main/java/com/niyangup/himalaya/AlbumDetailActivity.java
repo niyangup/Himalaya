@@ -138,7 +138,7 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
         mSubtitle.setText(album.getAnnouncer().getNickname());
 
         if (mLargeCover != null) {
-            Picasso.with(this).load(album.getCoverUrlLarge()).into(mLargeCover, new Callback() {
+            Picasso.with(this).load(album.getCoverUrlSmall()).into(mLargeCover, new Callback() {
                 @Override
                 public void onSuccess() {
                     Drawable drawable = mLargeCover.getDrawable();
@@ -156,7 +156,7 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
 
         }
 
-        Picasso.with(this).load(album.getCoverUrlLarge()).into(mSmallCover);
+        Picasso.with(this).load(album.getCoverUrlSmall()).into(mSmallCover);
     }
 
     @Override
@@ -172,7 +172,6 @@ public class AlbumDetailActivity extends BaseActivity implements IDetailViewCall
 
     @Override
     public void onItemClick(List<Track> tracks, int position) {
-        Log.d(TAG, "onItemClick: " + position);
         PlayerPresenterImpl playerPresenter = PlayerPresenterImpl.getInstance();
         playerPresenter.setPlayList(tracks, position);
         Intent intent = new Intent(AlbumDetailActivity.this, PlayerActivity.class);

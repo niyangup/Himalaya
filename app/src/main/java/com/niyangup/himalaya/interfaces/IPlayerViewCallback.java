@@ -2,6 +2,7 @@ package com.niyangup.himalaya.interfaces;
 
 import android.os.Trace;
 
+import com.ximalaya.ting.android.opensdk.model.track.Track;
 import com.ximalaya.ting.android.opensdk.player.service.XmPlayListControl;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface IPlayerViewCallback {
     void onPrePlayer(Trace trace);
 
 
-    void onListLoaded(List<Trace> traces);
+    void onListLoaded(List<Track> traces);
 
     /**
      * 播放器模式改变
@@ -35,4 +36,6 @@ public interface IPlayerViewCallback {
     void onAdLoading();
 
     void onAdFinished();
+
+    void onTrackUpdate(Track track);
 }
